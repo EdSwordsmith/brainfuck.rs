@@ -1,5 +1,5 @@
-use std::str::Chars;
 use crate::ast::*;
+use std::str::Chars;
 
 fn parse_loop(chars: &mut Chars) -> anyhow::Result<LoopNode> {
     let mut loop_node = LoopNode { nodes: Vec::new() };

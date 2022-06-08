@@ -10,7 +10,7 @@ pub enum OperationNode {
 
 #[derive(Debug)]
 pub struct LoopNode {
-    pub nodes: Vec<Node>, 
+    pub nodes: Vec<Node>,
 }
 
 #[derive(Debug)]
@@ -21,9 +21,9 @@ pub enum Node {
 
 #[derive(Debug)]
 pub struct ProgramNode {
-    pub nodes: Vec<Node>, 
+    pub nodes: Vec<Node>,
 }
 
 pub trait Visitor<T> {
-    fn visit_node(&mut self, node: &T) {}
+    fn visit_node(&mut self, _node: &T) {}
 }

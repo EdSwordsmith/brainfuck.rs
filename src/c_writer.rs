@@ -2,11 +2,11 @@ use std::io::Write;
 
 use crate::ast::*;
 
-pub struct CWriter<T : Write> {
+pub struct CWriter<T: Write> {
     pub out: T,
 }
 
-impl<T : Write> Visitor<OperationNode> for CWriter<T> {
+impl<T: Write> Visitor<OperationNode> for CWriter<T> {
     fn visit_node(&mut self, node: &OperationNode) {
         match node {
             OperationNode::IncrementValue => self.out.write(b"++*ptr;").unwrap(),
@@ -19,10 +19,10 @@ impl<T : Write> Visitor<OperationNode> for CWriter<T> {
     }
 }
 
-impl<T : Write> Visitor<LoopNode> for CWriter<T> {
+impl<T: Write> Visitor<LoopNode> for CWriter<T> {
     fn visit_node(&mut self, node: &LoopNode) {
         self.out.write(b"while (*ptr) {").unwrap();
-        
+
         for n in node.nodes.iter() {
             self.visit_node(n);
         }
@@ -31,7 +31,7 @@ impl<T : Write> Visitor<LoopNode> for CWriter<T> {
     }
 }
 
-impl<T : Write> Visitor<Node> for CWriter<T> {
+impl<T: Write> Visitor<Node> for CWriter<T> {
     fn visit_node(&mut self, node: &Node) {
         match node {
             Node::Operation(op_node) => self.visit_node(op_node),
@@ -40,7 +40,7 @@ impl<T : Write> Visitor<Node> for CWriter<T> {
     }
 }
 
-impl<T : Write> Visitor<ProgramNode> for CWriter<T> {
+impl<T: Write> Visitor<ProgramNode> for CWriter<T> {
     fn visit_node(&mut self, node: &ProgramNode) {
         self.out.write(b"#include <stdio.h>\n").unwrap();
         self.out.write(b"char tape[30000] = {0};").unwrap();
