@@ -25,7 +25,9 @@ pub fn tokenize(input: impl AsRef<str>) -> Vec<Token> {
                 index += 1;
             }
 
-            tokens.push(Token::IncValue(value));
+            if value != 0 {
+                tokens.push(Token::IncValue(value));
+            }
         } else if c == '>' || c == '<' {
             let mut value = if c == '>' { 1 } else { -1 };
 
@@ -34,7 +36,9 @@ pub fn tokenize(input: impl AsRef<str>) -> Vec<Token> {
                 index += 1;
             }
 
-            tokens.push(Token::IncPtr(value));
+            if value != 0 {
+                tokens.push(Token::IncPtr(value));
+            }
         } else if c == '.' {
             tokens.push(Token::Print);
         } else if c == ',' {
