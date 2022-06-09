@@ -3,8 +3,14 @@ use std::io::Write;
 use crate::ast::*;
 
 pub struct PythonWriter<T: Write> {
-    pub out: T,
-    pub ident: u32,
+    out: T,
+    ident: u32,
+}
+
+impl<T: Write> PythonWriter<T> {
+    pub fn new(out: T) -> Self {
+        PythonWriter { out: out, ident: 0 }
+    }
 }
 
 impl<T: Write> Visitor<OperationNode> for PythonWriter<T> {
@@ -73,8 +79,7 @@ impl<T: Write> Visitor<ProgramNode> for PythonWriter<T> {
         self.out
             .write(b"        current_input = input()\n\n")
             .unwrap();
-        self.out.write(b"    if len(current_input) > 0:\n")
-            .unwrap();
+        self.out.write(b"    if len(current_input) > 0:\n").unwrap();
         self.out
             .write(b"        tape[ptr] = ord(current_input[0])\n")
             .unwrap();

@@ -1,6 +1,9 @@
 use anyhow::{Context, Ok, Result};
 use ast::ProgramNode;
+use c_writer::CWriter;
 use clap::Parser;
+use interpreter::Interpreter;
+use python_writer::PythonWriter;
 use std::{fs, io::Write, path::PathBuf};
 
 use crate::ast::Visitor;
@@ -9,6 +12,7 @@ mod ast;
 mod c_writer;
 mod parser;
 mod python_writer;
+pub mod interpreter;
 
 #[derive(Parser)]
 #[clap(version, about)]
@@ -32,17 +36,17 @@ fn main() -> Result<()> {
     let mut visitor: Box<dyn Visitor<ProgramNode>> = if let Some(output) = cli.output {
         if let Some(extension) = output.extension() {
             if extension.eq("c") || extension.eq("cpp") {
-                Box::new(c_writer::CWriter { out })
+                Box::new(CWriter::new(out))
             } else if extension.eq("py") {
-                Box::new(python_writer::PythonWriter { out, ident: 0 })
+                Box::new(PythonWriter::new(out))
             } else {
-                unreachable!();
+                return Err(anyhow::Error::msg("Unsupported target type"));
             }
         } else {
             unreachable!();
         }
     } else {
-        Box::new(c_writer::CWriter { out })
+        Box::new(Interpreter::new())
     };
 
     visitor.visit_node(&ast);

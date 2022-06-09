@@ -3,7 +3,13 @@ use std::io::Write;
 use crate::ast::*;
 
 pub struct CWriter<T: Write> {
-    pub out: T,
+    out: T,
+}
+
+impl<T: Write> CWriter<T> {
+    pub fn new(out: T) -> Self {
+        CWriter { out }
+    }
 }
 
 impl<T: Write> Visitor<OperationNode> for CWriter<T> {
