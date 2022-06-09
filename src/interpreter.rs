@@ -14,10 +14,14 @@ impl Interpreter {
 impl Visitor<OperationNode> for Interpreter {
     fn visit_node(&mut self, node: &OperationNode) {
         match node {
-            OperationNode::IncrementValue => { self.tape[self.ptr] += 1; },
-            OperationNode::DecrementValue => { self.tape[self.ptr] -= 1; },
-            OperationNode::IncrementPointer => { self.ptr += 1; },
-            OperationNode::DecrementPointer => { self.ptr -= 1; },
+            OperationNode::IncrementValue(value) => { 
+                if *value > 0 {
+                    self.tape[self.ptr] = self.tape[self.ptr].wrapping_add(*value as u8);
+                } else {
+                    self.tape[self.ptr] = self.tape[self.ptr].wrapping_sub((- *value) as u8);
+                }
+            },
+            OperationNode::IncrementPointer(value) => { self.ptr = (self.ptr as isize + value) as usize; },
             OperationNode::Print => print!("{}", self.tape[self.ptr] as char),
             OperationNode::Read => {
                 let mut stdin = std::io::stdin();

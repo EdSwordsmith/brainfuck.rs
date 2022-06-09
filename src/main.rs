@@ -12,7 +12,8 @@ mod ast;
 mod c_writer;
 mod parser;
 mod python_writer;
-pub mod interpreter;
+mod interpreter;
+mod scanner;
 
 #[derive(Parser)]
 #[clap(version, about)]
@@ -26,7 +27,10 @@ fn main() -> Result<()> {
     let cli = Cli::parse();
     let input =
         fs::read_to_string(cli.input).with_context(|| format!("Error reading source file"))?;
-    let ast = parser::parse(input)?;
+
+    let tokens = scanner::tokenize(input);
+    let ast = parser::parse(tokens)?;
+
     let out: Box<dyn Write> = if let Some(output) = &cli.output {
         Box::new(fs::File::create(output)?)
     } else {

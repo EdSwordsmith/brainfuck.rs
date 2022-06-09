@@ -1,9 +1,7 @@
 #[derive(Debug)]
 pub enum OperationNode {
-    IncrementValue,
-    DecrementValue,
-    IncrementPointer,
-    DecrementPointer,
+    IncrementValue(i16),
+    IncrementPointer(isize),
     Print,
     Read,
 }

@@ -15,12 +15,10 @@ impl<T: Write> CWriter<T> {
 impl<T: Write> Visitor<OperationNode> for CWriter<T> {
     fn visit_node(&mut self, node: &OperationNode) {
         match node {
-            OperationNode::IncrementValue => self.out.write(b"++*ptr;").unwrap(),
-            OperationNode::DecrementValue => self.out.write(b"--*ptr;").unwrap(),
-            OperationNode::IncrementPointer => self.out.write(b"++ptr;").unwrap(),
-            OperationNode::DecrementPointer => self.out.write(b"--ptr;").unwrap(),
-            OperationNode::Print => self.out.write(b"putchar(*ptr);").unwrap(),
-            OperationNode::Read => self.out.write(b"*ptr = getchar();").unwrap(),
+            OperationNode::IncrementValue(value) => self.out.write_fmt(format_args!("*ptr += {};", value)).unwrap(),
+            OperationNode::IncrementPointer(value) => self.out.write_fmt(format_args!("ptr += {};", value)).unwrap(),
+            OperationNode::Print => {self.out.write(b"putchar(*ptr);").unwrap();},
+            OperationNode::Read => { self.out.write(b"*ptr = getchar();").unwrap();},
         };
     }
 }
