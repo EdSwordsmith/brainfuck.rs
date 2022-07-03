@@ -1,4 +1,5 @@
 use anyhow::{Context, Ok, Result};
+use asm_writer::AsmWriter;
 use ast::ProgramNode;
 use c_writer::CWriter;
 use clap::Parser;
@@ -13,6 +14,7 @@ mod c_writer;
 mod parser;
 mod python_writer;
 mod interpreter;
+mod asm_writer;
 mod scanner;
 
 #[derive(Parser)]
@@ -43,6 +45,8 @@ fn main() -> Result<()> {
                 Box::new(CWriter::new(out))
             } else if extension.eq("py") {
                 Box::new(PythonWriter::new(out))
+            } else if extension.eq("asm") {
+                Box::new(AsmWriter::new(out))
             } else {
                 return Err(anyhow::Error::msg("Unsupported target type"));
             }
